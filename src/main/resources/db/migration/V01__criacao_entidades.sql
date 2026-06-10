@@ -1,3 +1,10 @@
+-- Tabela de Perfis de Acesso
+CREATE TABLE PERFIS (
+    id_perfil INT PRIMARY KEY IDENTITY(1,1),
+    nome_perfil VARCHAR(50) UNIQUE NOT NULL,
+    descricao VARCHAR(255)
+);
+
 -- Criação da Tabela de Usuários
 CREATE TABLE USUARIOS (
     id_usuario INT PRIMARY KEY IDENTITY(1,1),
@@ -9,10 +16,38 @@ CREATE TABLE USUARIOS (
     data_criacao DATETIME NOT NULL
 );
 
--- Tabela de Perfis de Acesso
-CREATE TABLE PERFIS (
-    id_perfil INT PRIMARY KEY IDENTITY(1,1),
-    nome_perfil VARCHAR(50) UNIQUE NOT NULL,
+-- Criação da Tabela de Setores
+CREATE TABLE SETORES (
+    id_setor INT PRIMARY KEY IDENTITY(1,1),
+    titulo VARCHAR(50) UNIQUE NOT NULL,
+    descricao VARCHAR(255)
+);
+
+-- Criação da Tabela de Cargos
+CREATE TABLE CARGOS (
+    id_cargo INT PRIMARY KEY IDENTITY(1,1),
+    titulo VARCHAR(50) UNIQUE NOT NULL,
+    descricao VARCHAR(255)
+);
+
+-- Criação da Tabela de Tipos de Interação
+CREATE TABLE TIPOS_INTERACAO (
+    id_tipo_interacao INT PRIMARY KEY IDENTITY(1,1),
+    tipo VARCHAR(50) UNIQUE NOT NULL,
+    descricao VARCHAR(255)
+);
+
+-- Criação da Tabela de Estágios de Venda
+CREATE TABLE ESTAGIOS_VENDA (
+    id_estagio INT PRIMARY KEY IDENTITY(1,1),
+    estagio VARCHAR(50) UNIQUE NOT NULL,
+    descricao VARCHAR(255)
+);
+
+-- Criação da Tabela de Status de Tarefa
+CREATE TABLE STATUS_TAFERA (
+    id_status_tarefa INT PRIMARY KEY IDENTITY(1,1),
+    status VARCHAR(50) UNIQUE NOT NULL,
     descricao VARCHAR(255)
 );
 
@@ -64,38 +99,5 @@ CREATE TABLE TAREFAS (
     id_oportunidade INT NOT NULL FOREIGN KEY REFERENCES OPORTUNIDADES(id_oportunidade)
 );
 
--- Criação da Tabela de Setores
-CREATE TABLE SETORES (
-    id_setor INT PRIMARY KEY IDENTITY(1,1),
-    titulo VARCHAR(50) UNIQUE NOT NULL,
-    descricao VARCHAR(255)
-);
 
--- Criação da Tabela de Cargos
-CREATE TABLE CARGOS (
-    id_cargo INT PRIMARY KEY IDENTITY(1,1),
-    titulo VARCHAR(50) UNIQUE NOT NULL,
-    descricao VARCHAR(255)
-);
-
--- Criação da Tabela de Tipos de Interação
-CREATE TABLE TIPOS_INTERACAO (
-    id_tipo_interacao INT PRIMARY KEY IDENTITY(1,1),
-    tipo VARCHAR(50) UNIQUE NOT NULL,
-    descricao VARCHAR(255)
-);
-
--- Criação da Tabela de Estágios de Venda
-CREATE TABLE ESTAGIOS_VENDA (
-    id_estagio INT PRIMARY KEY IDENTITY(1,1),
-    estagio VARCHAR(50) UNIQUE NOT NULL,
-    descricao VARCHAR(255)
-);
-
--- Criação da Tabela de Status de Tarefa
-CREATE TABLE STATUS_TAFERA (
-    id_status_tarefa INT PRIMARY KEY IDENTITY(1,1),
-    status VARCHAR(50) UNIQUE NOT NULL,
-    descricao VARCHAR(255)
-);
 GO
