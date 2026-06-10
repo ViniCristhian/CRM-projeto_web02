@@ -13,7 +13,7 @@ CREATE TABLE USUARIOS (
     senha VARCHAR(255) UNIQUE NOT NULL,
     id_perfil INT NOT NULL FOREIGN KEY (id_perfil) REFERENCES PERFIS(id_perfil),
     ativo BIT DEFAULT 1,
-    data_criacao DATETIME NOT NULL
+    data_criacao DATE NOT NULL DEFAULT GETDATE()
 );
 
 -- Criação da Tabela de Setores
