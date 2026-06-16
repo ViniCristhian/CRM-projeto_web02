@@ -2,10 +2,12 @@ package com.crmpratu.crm_api.controller;
 
 import com.crmpratu.crm_api.model.Tarefa;
 import com.crmpratu.crm_api.repository.TarefaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,6 +23,11 @@ public class TarefaController {
 	@GetMapping("/list")
 	public List<Tarefa> findAll() {
 		return tarefaRepository.findAll();
+	}
+
+	@PostMapping
+	public Tarefa create(@Valid @RequestBody Tarefa tarefa) {
+		return tarefaRepository.save(tarefa);
 	}
 
 }
