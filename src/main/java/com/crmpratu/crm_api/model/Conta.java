@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,12 +40,15 @@ public class Conta {
 
 	@ManyToOne
 	@JoinColumn(name = "id_setor")
+	@JsonIgnoreProperties("contas")
 	private Setor setor;
 
 	@OneToMany(mappedBy = "conta")
+	@JsonIgnoreProperties("conta")
 	private List<Contato> contatos;
 
 	@OneToMany(mappedBy = "conta")
+	@JsonIgnoreProperties("conta")
 	private List<Oportunidade> oportunidades;
 
 	public Conta() {

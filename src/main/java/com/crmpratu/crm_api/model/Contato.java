@@ -1,5 +1,6 @@
 package com.crmpratu.crm_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,13 +34,16 @@ public class Contato {
 
 	@ManyToOne
 	@JoinColumn(name = "id_cargo")
+	@JsonIgnoreProperties("contatos")
 	private Cargo cargo;
 
 	@ManyToOne
 	@JoinColumn(name = "id_conta")
+	@JsonIgnoreProperties("contatos")
 	private Conta conta;
 
 	@OneToMany(mappedBy = "contato")
+	@JsonIgnoreProperties("contato")
 	private List<Interacao> interacoes;
 
 	public Contato() {

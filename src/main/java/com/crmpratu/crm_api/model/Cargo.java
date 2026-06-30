@@ -1,5 +1,6 @@
 package com.crmpratu.crm_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +27,7 @@ public class Cargo {
 	private String descricao;
 
 	@OneToMany(mappedBy = "cargo")
+	@JsonIgnoreProperties("cargo")
 	private List<Contato> contatos;
 
 	public Cargo() {

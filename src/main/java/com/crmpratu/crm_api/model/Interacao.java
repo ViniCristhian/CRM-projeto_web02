@@ -2,6 +2,7 @@ package com.crmpratu.crm_api.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,10 +30,12 @@ public class Interacao {
 
 	@ManyToOne
 	@JoinColumn(name = "id_tipo_interacao")
+	@JsonIgnoreProperties("interacoes")
 	private TipoInteracao tipoInteracao;
 
 	@ManyToOne
 	@JoinColumn(name = "id_contato")
+	@JsonIgnoreProperties("interacoes")
 	private Contato contato;
 
 	public Interacao() {

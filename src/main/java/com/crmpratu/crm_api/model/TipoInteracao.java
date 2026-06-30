@@ -1,5 +1,6 @@
 package com.crmpratu.crm_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +27,7 @@ public class TipoInteracao {
 	private String descricao;
 
 	@OneToMany(mappedBy = "tipoInteracao")
+	@JsonIgnoreProperties("tipoInteracao")
 	private List<Interacao> interacoes;
 
 	public TipoInteracao() {
