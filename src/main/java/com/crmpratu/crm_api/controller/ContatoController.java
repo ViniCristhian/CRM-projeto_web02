@@ -4,6 +4,8 @@ import com.crmpratu.crm_api.model.Contato;
 import com.crmpratu.crm_api.repository.ContatoRepository;
 import com.crmpratu.crm_api.service.ContatoService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,19 +28,36 @@ public class ContatoController {
 		this.contatoService = contatoService;
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_SEARCH_CONTACT')")
 	@GetMapping("/list")
 	public List<Contato> findAll() {
 		return contatoRepository.findAll();
 	}
 
-	@PostMapping
+	@PreAuthorize("hasAuthority('ROLE_SEARCH_CONTACT')")
+	@GetMapping("/find/{id}")
+	public ResponseEntity<Contato> findById(@PathVariable Long id) {
+		return contatoRepository.findById(id)
+				.map(ResponseEntity::ok)
+				.orElse(ResponseEntity.notFound().build());
+	}
+
+	@PreAuthorize("hasAuthority('ROLE_REGISTER_CONTACT')")
+	@PostMapping("/register")
 	public Contato create(@Valid @RequestBody Contato contato) {
 		return contatoRepository.save(contato);
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_REGISTER_CONTACT')")
 	@PutMapping("/update/{id}")
 	public ResponseEntity<Contato> update(@PathVariable Long id, @Valid @RequestBody Contato contato) {
 		return ResponseEntity.ok(contatoService.update(id, contato));
+	}
+
+	@PreAuthorize("hasAuthority('ROLE_REMOVE_CONTACT')")
+	@DeleteMapping("/delete/{id}")
+	public void delete(@PathVariable Long id) {
+		contatoRepository.deleteById(id);
 	}
 
 }

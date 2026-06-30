@@ -21,10 +21,4 @@ public class PerfilController {
         this.perfilRepository = perfilRepository;
     }
 
-    @GetMapping("/list")
-    public List<Perfil> findAll() {
-        return perfilRepository.findAll();
-    }
-
-
 }

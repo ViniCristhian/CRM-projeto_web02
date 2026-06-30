@@ -24,4 +24,10 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
+    public void updateActiveProperty(Long id, Boolean ativo) {
+        Usuario usuarioSaved = findUsuarioById(id);
+        usuarioSaved.setAtivo(ativo);
+        usuarioRepository.save(usuarioSaved);
+    }
+
 }
