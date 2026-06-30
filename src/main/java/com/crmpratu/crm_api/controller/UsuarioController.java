@@ -4,6 +4,7 @@ import com.crmpratu.crm_api.model.Usuario;
 import com.crmpratu.crm_api.repository.UsuarioRepository;
 import com.crmpratu.crm_api.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,16 +27,19 @@ public class UsuarioController {
 		this.usuarioService = usuarioService;
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_SEARCH_USER')")
 	@GetMapping("/list")
 	public List<Usuario> findAll() {
 		return usuarioRepository.findAll();
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_REGISTER_USER')")
 	@PostMapping
 	public Usuario create(@Valid @RequestBody Usuario usuario) {
 		return usuarioRepository.save(usuario);
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_REGISTER_USER')")
 	@PutMapping("/update/{id}")
 	public ResponseEntity<Usuario> update(@PathVariable Long id, @Valid @RequestBody Usuario usuario) {
 		return ResponseEntity.ok(usuarioService.update(id, usuario));

@@ -2,11 +2,17 @@ package com.crmpratu.crm_api.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+
 import java.util.List;
+
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -28,6 +34,10 @@ public class Perfil {
 
     @OneToMany(mappedBy = "perfil")
     private List<Usuario> usuarios;
+
+    @ManyToMany(fetch = FetchType.EAGER) // fetch = buscar - eager = ancioso
+    @JoinTable(name = "PERFIS_PERMISSOES", joinColumns = @JoinColumn(name = "id_perfil"), inverseJoinColumns = @JoinColumn(name = "id_permissao"))
+    private List<Permissao> permissoes;
 
     public Perfil() {
     }
@@ -62,6 +72,14 @@ public class Perfil {
 
     public void setUsuarios(List<Usuario> usuarios) {
         this.usuarios = usuarios;
+    }
+
+    public List<Permissao> getPermissoes() {
+        return permissoes;
+    }
+
+    public void setPermissoes(List<Permissao> permissoes) {
+        this.permissoes = permissoes;
     }
 
     @Override
