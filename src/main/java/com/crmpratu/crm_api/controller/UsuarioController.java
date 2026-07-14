@@ -37,9 +37,9 @@ public class UsuarioController {
 	}
 
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_USER')")
-	@PostMapping
+	@PostMapping("/register")
 	public Usuario create(@Valid @RequestBody Usuario usuario) {
-		return usuarioRepository.save(usuario);
+		return usuarioService.create(usuario);
 	}
 
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_USER')")

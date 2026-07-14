@@ -40,7 +40,10 @@ public class Perfil {
     @JoinTable(name = "PERFIS_PERMISSOES", joinColumns = @JoinColumn(name = "id_perfil"), inverseJoinColumns = @JoinColumn(name = "id_permissao"))
     private List<Permissao> permissoes;
 
-    public Perfil() {
+    public Perfil() { }
+
+    public Perfil(Long id) {
+        this.id = id;
     }
 
     public Long getId() {

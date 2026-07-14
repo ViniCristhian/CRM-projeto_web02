@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,13 +21,14 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/auth")
 public class AuthController {
 
+    public static final long REFRESH_TOKEN_DURATION_SEC = 60 * 60 * 24 * 7;
+
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
 
-    public record LoginRequest(String username, String password) {}
-    public record RefreshRequest(String refreshToken) {}
-    public record LoginResponse(String accessToken, String refreshToken) {}
+    public record LoginRequest(String email, String senha) {}
+    public record LoginResponse(String accessToken) {}
 
     public AuthController(TokenService tokenService, AuthenticationManager authenticationManager, UserDetailsService userDetailsService) {
         this.tokenService = tokenService;
@@ -35,28 +37,42 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest loginRequest) {
+    public LoginResponse login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password())
+                new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.senha())
         );
         String accessToken = tokenService.generateToken(authentication);
         String refreshToken = tokenService.generateRefreshToken(authentication);
-        return new LoginResponse(accessToken, refreshToken);
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(false)
+                .path("/auth")
+                .maxAge(REFRESH_TOKEN_DURATION_SEC)
+                .sameSite("Strict")
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        return new LoginResponse(accessToken);
     }
 
     @PostMapping("/refresh")
-    public LoginResponse refreshToken(@RequestBody RefreshRequest refreshRequest) {
-        return tokenService.validateTokenAndGetSubject(refreshRequest.refreshToken())
+    public LoginResponse refreshToken(@CookieValue String refreshToken, HttpServletResponse response) {
+        return tokenService.validateTokenAndGetSubject(refreshToken)
                 .map(subject -> {
                     UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
-
                     Authentication authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
 
                     String newAccessToken = tokenService.generateToken(authentication);
                     String newRefreshToken = tokenService.generateRefreshToken(authentication);
 
-                    return new LoginResponse(newAccessToken, newRefreshToken);
+                    ResponseCookie cookie = ResponseCookie.from("refreshToken", newRefreshToken)
+                            .httpOnly(true).secure(false).path("/auth")
+                            .maxAge(REFRESH_TOKEN_DURATION_SEC).sameSite("Strict").build();
+
+                    response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+                    return new LoginResponse(newAccessToken);
                 })
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.UNAUTHORIZED, "Refresh token inválido ou expirado"));
@@ -66,7 +82,7 @@ public class AuthController {
     public String logout(HttpServletResponse response) {
         ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true).secure(false).path("/auth")
-                .maxAge(0) // Expira o cookie
+                .maxAge(0)
                 .sameSite("Strict").build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());

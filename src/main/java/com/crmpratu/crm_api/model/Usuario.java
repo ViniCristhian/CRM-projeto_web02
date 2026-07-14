@@ -16,6 +16,8 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "USUARIOS")
@@ -38,18 +40,23 @@ public class Usuario {
     private String senha;
 
     @Column(name = "ativo")
+    @ColumnDefault("true")
     private boolean ativo;
 
+    @CreationTimestamp
     @Column(name = "data_criacao")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime dataCriacao;
 
     @ManyToOne
-    @JoinColumn(name = "id_perfil")
+    @JoinColumn(name = "id_perfil", nullable = false)
+    @ColumnDefault("4")
     @JsonIgnoreProperties("usuarios")
     private Perfil perfil;
 
     public Usuario() {
+        this.ativo = true;
+        this.perfil = new Perfil(4L);
     }
 
     public Long getId() {
