@@ -13,7 +13,7 @@ CREATE TABLE USUARIOS
     nome         VARCHAR(100)        NOT NULL,
     email        VARCHAR(100)        NOT NULL,
     senha        VARCHAR(255) UNIQUE NOT NULL,
-    id_perfil    INT                 NOT NULL FOREIGN KEY REFERENCES PERFIS (id_perfil),
+    id_perfil    INT                 NOT NULL DEFAULT 4 FOREIGN KEY REFERENCES PERFIS (id_perfil) ,
     ativo        BIT                          DEFAULT 1,
     data_criacao DATE                NOT NULL DEFAULT GETDATE()
 )
@@ -115,7 +115,8 @@ CREATE TABLE TAREFAS
 INSERT INTO PERFIS (nome_perfil, descricao)
 VALUES ('Administrador', 'Acesso total ao sistema, relatórios gerenciais e gerenciamento de usuários.'),
        ('Gestor', 'Acesso completo a visualização de pipelines de vendas e relatórios da equipe.'),
-       ('Vendedor', 'Acesso restrito para criar e gerenciar suas próprias contas e oportunidades.');
+       ('Vendedor', 'Acesso restrito para criar e gerenciar suas próprias contas e oportunidades.'),
+       ('Leitor', 'Acesso somente leitura para visualizar informações de contas e oportunidades.');
 
 
 -- Populando a tabela de Setores
